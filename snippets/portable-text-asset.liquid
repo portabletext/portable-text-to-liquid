@@ -1,0 +1,10 @@
+{% liquid
+  case asset.type
+    when 'image'
+      echo images[asset.filename] | image_url: width: 1920 | image_tag: loading: lazy
+    when 'file'
+      echo asset.filename | link_to: asset.url
+    when 'video'
+      render 'portable-text-video', asset: asset
+  endcase
+%}

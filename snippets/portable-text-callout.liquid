@@ -1,0 +1,11 @@
+<div class="title title--primary">
+  <h2>
+    {% if callout.links %}
+      <a href="{{ callout.links }}" class="link underlined-link">
+    {% endif %}
+    {{ callout.text }}
+    {% if callout.links %}
+      </a>
+    {% endif %}
+  </h2>
+</div>

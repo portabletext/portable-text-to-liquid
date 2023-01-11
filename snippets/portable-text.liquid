@@ -1,0 +1,41 @@
+{%- liquid
+  comment
+    This snippet is used to render a portable text block. It looks through each block and render the correct partial based on the block type.
+    If you have custom blocks, you can add them here. We've got a couple of examples here to render an accordion and a callout, which will work in Shopify's Dawn theme out of the box. The Sanity schema for these blocks is provided in the readme.
+  endcomment
+
+  for block in portableText
+    case block._type
+      when "block"
+        render 'portable-text-block' with block as block, lastListItem: lastListItem, lastListLevel: lastListLevel, errors: errors
+        # The below variable are used to render out opening and closing tags for lists...
+        assign lastListItem = block.listItem
+        assign lastListLevel = block.level
+      when "span"
+        render 'portable-text-span' with block as span, markDefs: markDefs, errors: errors
+      when "shopify.asset"
+        render 'portable-text-asset' with block as asset
+      when "callout"
+        render 'portable-text-callout' with block as callout
+      when "accordion"
+        render 'portable-text-accordion' with block as accordion
+      else
+        if errors != false
+          echo '<script type="text/javascript">console.warn("Unknown block type: {type}")</script>' | replace: "{type}", block._type
+        endif
+    endcase
+  endfor
+
+  # The below is used to render out closing tags for lists if the last block happens to be one...
+  if lastListItem and lastListLevel > 0
+    for i in (1..lastListLevel)
+      if lastListItem == 'bullet'
+        echo '</ul>'
+      elsif lastListItem == 'number'
+        echo '</ol>'
+      else
+        echo '</ul>'
+      endif
+    endfor
+  endif
+-%}

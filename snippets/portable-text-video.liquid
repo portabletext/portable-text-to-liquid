@@ -1,0 +1,11 @@
+<div>
+  <video
+    playsinline="playsinline"
+    controls="controls"
+    preload="metadata"
+    aria-label="Potion beats"
+    poster="{{ asset.preview.url }}"
+  >
+    <source src="{{ asset.url }}" type="video/mp4"><img src="{{ asset.preview.url | file_img_url }}" loading="lazy" width="{{ asset.preview.width }}" height="{{ asset.preview.height }}">
+  </video>
+</div>

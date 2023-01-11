@@ -1,0 +1,73 @@
+{%- liquid
+  comment
+    Here we define how to render a block of Portable Text. We use a case statement to output the HTML tag for the block type, and then recursively render the children of the block.
+    You can customise how your blocks are rendered by adding more cases to this statement, or by altering the HTML tags being output.
+  endcomment
+
+  assign liquidBlock = ""
+
+  capture children
+    render "portable-text", portableText: block.children, markDefs: block.markDefs
+  endcapture
+
+  comment
+    This logic closes any open lists when the list level decreases or the list type changes.
+  endcomment
+  if lastListLevel > block.level or lastListItem != block.listItem
+    assign listCloseCount = lastListLevel | minus: block.level | at_least: 1
+    for i in (1..listCloseCount)
+      if lastListItem == 'bullet'
+        echo '</ul>'
+      elsif lastListItem == 'number'
+        echo '</ol>'
+      else
+        echo '</ul>'
+      endif
+    endfor
+  endif
+
+  comment
+    Below we define the HTML tags for each block type. You can customise these to match your own Portable Text configuration.
+  endcomment
+  case block.style
+    when "normal"
+      if block.listItem
+        if lastListItem != block.listItem or block.level > lastListLevel
+          if block.listItem == 'bullet'
+            assign listOpen = '<ul>'
+          elsif block.listItem == 'number'
+            assign listOpen = '<ol>'
+          else
+            assign listOpen = '<ul>'
+            if errors != false
+              echo '<script type="text/javascript">console.warn("Unknown list type: {type}")</script>' | replace: "{type}", block.listItem
+            endif
+          endif
+        endif
+
+        assign liquidBlock = listOpen | append: '<li>{children}</li>'
+      else
+        assign liquidBlock = '<p>{children}</p>'
+      endif
+    when "blockquote"
+      assign liquidBlock = '<blockquote>{children}</blockquote>'
+    when "h1"
+      assign liquidBlock = '<h1>{children}</h1>'
+    when "h2"
+      assign liquidBlock = '<h2>{children}</h2>'
+    when "h3"
+      assign liquidBlock = '<h3>{children}</h3>'
+    when "h4"
+      assign liquidBlock = '<h4>{children}</h4>'
+    when "h5"
+      assign liquidBlock = '<h5>{children}</h5>'
+    when "h6"
+      assign liquidBlock = '<h6>{children}</h6>'
+    else
+      if errors != false
+        echo '<script type="text/javascript">console.warn("Unknown block style: {type}")</script>' | replace: "{type}", block.style
+      endif
+  endcase
+
+  echo liquidBlock | replace: '{children}', children
+-%}
