@@ -14,10 +14,10 @@ Pass the snippet a `portableText` variable containing the JSON value of the Port
 {% render 'portable-text', portableText: liquidVariable %}
 ```
 
-For example, you might have a Sanity document – synced to a product metafield in the namespace `sanity` and the key `published` – with a `body` field containing Portable Text. To render this, your Liquid code would be:
+For example, you might have a Sanity document – synced to a product metafield in the namespace `app--6007307--sanity` and the key `published` – with a `body` field containing Portable Text. To render this, your Liquid code would be:
 
 ```liquid
-{% render 'portable-text', portableText: product.metafields.sanity.published.value.body %}
+{% render 'portable-text', portableText: product.metafields.app--6007307--sanity.published.value.body %}
 ```
 
 ## How it works
