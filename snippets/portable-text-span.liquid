@@ -29,7 +29,7 @@
         if currentMark
           if currentMark._type == "link"
             assign tags = tags | append: '<a href="' | append: currentMark.href | append: '">'
-            assign closingTags = tags | append: "</a>"
+            assign closingTags = closingTags | append: "</a>"
           else
             comment
               We don't know what to do with this mark - so we'll just ignore it unless errors are true
