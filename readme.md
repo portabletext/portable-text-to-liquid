@@ -74,6 +74,8 @@ A span renders inline text content and has marks to indicate the type of inline 
 
 For custom marks with mark definitions, you can create additional definitions which can access the properties of the mark definition. An example of this is provided concerning a `link` mark where an `href` property contains the URL for the link.
 
+The default `link` mark only renders a link for `http`, `https`, `mailto` and `tel` URLs, as well as hash, absolute-path and relative URLs. Any other URL, such as `javascript:`, is rendered as plain text.
+
 If an unknown mark is encountered, then the span text will still be output. A message will be logged in the browser console to indicate a missing mark type.
 
 ## Disabling errors / handling unknown types
