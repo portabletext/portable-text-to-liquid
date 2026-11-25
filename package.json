@@ -1,0 +1,11 @@
+{
+  "name": "portable-text-to-liquid",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "liquidjs": "^10.30.1"
+  }
+}

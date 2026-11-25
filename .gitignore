@@ -1,2 +1,3 @@
 # macOS finder cache file
 .DS_Store
+node_modules

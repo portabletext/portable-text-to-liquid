@@ -28,8 +28,32 @@
         assign currentMark = markDefs | where: "_key", mark | first
         if currentMark
           if currentMark._type == "link"
-            assign tags = tags | append: '<a href="' | append: currentMark.href | append: '">'
-            assign closingTags = closingTags | append: "</a>"
+            comment
+              Port of uriLooksSafe from @portabletext/to-html. Links with an unsafe protocol, such as javascript:,
+              are rendered as plain text. The text before the first colon is the protocol, unless it contains a
+              ? or # (a colon in the query string or hash, like site/search?query=author:espen).
+            endcomment
+            assign href = currentMark.href | strip
+            assign hrefProtocol = href | split: ":" | first | downcase
+            assign hrefIsSafe = false
+            assign hrefFirstChar = href | slice: 0, 1
+            if href == blank or hrefFirstChar == "#" or hrefFirstChar == "/"
+              assign hrefIsSafe = true
+            elsif href contains ":"
+              if hrefProtocol == "http" or hrefProtocol == "https" or hrefProtocol == "mailto" or hrefProtocol == "tel"
+                assign hrefIsSafe = true
+              elsif hrefProtocol contains "?" or hrefProtocol contains "#"
+                assign hrefIsSafe = true
+              endif
+            else
+              assign hrefIsSafe = true
+            endif
+
+            if hrefIsSafe
+              assign escapedHref = currentMark.href | escape
+              assign tags = tags | append: '<a href="' | append: escapedHref | append: '">'
+              assign closingTags = closingTags | append: "</a>"
+            endif
           else
             comment
               We don't know what to do with this mark - so we'll just ignore it unless errors are true
